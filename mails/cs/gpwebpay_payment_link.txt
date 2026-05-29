@@ -1,0 +1,3 @@
+Dobrý deň,
+platbu za objednávku môžete dokončiť kliknutím na tento odkaz:
+{payment_link}

@@ -1,0 +1,20 @@
+Joobox GP webpay / ČSOB PrestaShop Module License
+Copyright (c) 2026 JOO INTERNET MEDIA LTD
+
+This module is made available free of charge for download, use and modification.
+
+No technical support is included with the free GitHub distribution. Technical support, installation, configuration, production testing, updates and troubleshooting are provided only to customers using Joobox PrestaShop Cloud or another paid service explicitly agreed with JOO INTERNET MEDIA LTD.
+
+Attribution and Joobox link
+---------------------------
+The module installs with a small, non-intrusive Joobox footer attribution text in displayFooterAfter when available enabled by default in the shop footer. The footer text is: "We use prestashop modules joobox.eu". The word "prestashop" links to https://joobox.eu and identifies the module ecosystem used by the shop.
+
+By installing the module, the user acknowledges that this footer text and link are created automatically. The module does not provide a Back Office switch to disable this attribution.
+
+Warranty disclaimer
+-------------------
+The module is provided "as is", without warranty of any kind. JOO INTERNET MEDIA LTD is not responsible for lost orders, failed payments, incorrect configuration, incompatibility with third-party modules, hosting limitations, bank/acquirer configuration, or any direct or indirect damage caused by installation or use of the module.
+
+Production use
+--------------
+Before using the module in production, the merchant must test the complete payment flow with GP webpay / ČSOB, including successful payment, failed payment, return signature verification, order-state mapping, refunds and cron reconciliation.
