@@ -78,3 +78,18 @@ $_MODULE['<{jooim_gpwebpay}prestashop>admin_order_870f622f6c6e122fe3991dcfdafaf7
 $_MODULE['<{jooim_gpwebpay}prestashop>admin_order_fc94fd9476bbfea0e95bda062fa73b65'] = 'Zbývající refundovatelná částka';
 $_MODULE['<{jooim_gpwebpay}prestashop>admin_order_53f581817606b75c0c55f96811e761e2'] = 'Modul lokálně ukládá celkovou akceptovanou refundovanou částku a blokuje refundace nad zbývající refundovatelnou částku. Refundace přes GP webpay WS je dostupná pouze tehdy, když brána danou operaci povolí. U čerstvě zaplacených transakcí před uzavřením dávky použijte v portálu GP webpay zrušení zaplacení, pokud refundace není akceptována.';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_5ba6d3f1dc47bd2e19046edb437b1a46'] = 'Neplatná částka refundace. Zbývající refundovatelná částka je %s.';
+
+// GitHub update checker
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_e2b8575e1fd2467e8d1ee9749a57513c'] = 'Update check';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_68af74b08d0a6bef3a7cab83b43007a8'] = 'Current module version';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_90725f7a92bc20cc7d26c20261af79da'] = 'Latest version on GitHub';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_f5359d1dd07def542aa9b0577fb27068'] = 'Update status';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_afdac9282c19d277f0eb8c3cb62fcefb'] = 'Module is up to date.';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_105639f6b7c568ce5ecf630b6d196109'] = 'A new module version is available.';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_ddc725eae7cbd49e09089df5f6cd7f50'] = 'Unable to verify the latest version from GitHub. Check releases manually.';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_8c912169e1c01fceba3bc0758f956fe5'] = 'Open GitHub Releases';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_0d9e71a5f31d8ddea938f07fda9a1444'] = 'Refresh update status';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_1d1840de10b4c570a590a590a07b508c'] = 'For PrestaShop installation, do not use GitHub automatic "Source code ZIP". Use only the installation ZIP file from the release assets.';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_712bd563f4ec14a3e9f63cd426a8f515'] = 'Last checked';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_88183b946cc5f0e8c96b2e66e1c74a7e'] = 'Unknown';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_71e0aea296c265512a5bc54716b4381e'] = 'GitHub check failed: ';
