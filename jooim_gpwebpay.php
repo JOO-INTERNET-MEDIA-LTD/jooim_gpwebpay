@@ -8,7 +8,7 @@ use PrestaShop\PrestaShop\Core\Payment\PaymentOption;
 
 class Jooim_Gpwebpay extends PaymentModule
 {
-    const VERSION = '1.00.00';
+    const VERSION = '1.00.01';
     private $html = '';
 
     public function __construct()
