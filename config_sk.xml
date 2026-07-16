@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>jooim_gpwebpay</name>
-    <displayName><![CDATA[Payment gateway GP webpay / ČSOB]]></displayName>
-    <version><![CDATA[1.00.00]]></version>
-    <description><![CDATA[Accept card payments via GP webpay / ČSOB with repeat payment, logging and refund support.]]></description>
+    <displayName><![CDATA[Platobn&aacute; br&aacute;na GP webpay / ČSOB]]></displayName>
+    <version><![CDATA[1.00.01]]></version>
+    <description><![CDATA[Prij&iacute;majte platby kartou cez GP webpay / ČSOB s podporou opakovania platby, logovania a refund&aacute;ci&iacute;.]]></description>
     <author><![CDATA[JOO INTERNET MEDIA LTD]]></author>
     <tab><![CDATA[payments_gateways]]></tab>
     <is_configurable>1</is_configurable>

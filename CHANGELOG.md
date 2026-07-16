@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.00.01
+
+- Replaced raw internal payment states such as `paid` with customer-friendly translated labels on the order confirmation page.
+- Stopped displaying the raw GP webpay `RESULTTEXT` value (for example `OK`) to customers; it remains stored for diagnostics.
+- Added translated customer messages for successful, authorized, pending, failed, verification-failed and refunded payment states.
+- Improved the payment-return block with semantic alert styling.
+
 ## 1.00.00 - testfix12
 
 - Added local tracking of accepted GP webpay refund totals.

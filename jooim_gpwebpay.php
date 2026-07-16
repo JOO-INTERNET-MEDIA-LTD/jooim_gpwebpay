@@ -95,9 +95,85 @@ class Jooim_Gpwebpay extends PaymentModule
         if (!$this->active) { return ''; }
         $order = isset($params['order']) ? $params['order'] : null;
         if (!Validate::isLoadedObject($order)) { return ''; }
+
         $payment = GpwebpayRepository::getByOrderId((int)$order->id);
-        $this->context->smarty->assign(array('gpwebpay_payment'=>$payment));
+        if (!$payment) { return ''; }
+
+        $this->context->smarty->assign(array(
+            'gpwebpay_payment_status' => $this->getPaymentReturnPresentation($payment),
+        ));
+
         return $this->display(__FILE__, 'views/templates/front/payment_return.tpl');
+    }
+
+    private function getPaymentReturnPresentation(array $payment)
+    {
+        $status = isset($payment['status']) ? strtolower(trim((string)$payment['status'])) : '';
+
+        switch ($status) {
+            case 'paid':
+                return array(
+                    'label' => $this->l('Payment successful'),
+                    'message' => $this->l('Your payment was received successfully. The order is now being processed.'),
+                    'alert_class' => 'alert-success',
+                );
+
+            case 'authorized':
+                return array(
+                    'label' => $this->l('Payment authorized'),
+                    'message' => $this->l('Your payment was authorized successfully and is awaiting final processing.'),
+                    'alert_class' => 'alert-success',
+                );
+
+            case 'pending':
+                return array(
+                    'label' => $this->l('Payment is being processed'),
+                    'message' => $this->l('The payment result has not been confirmed yet. The order status will be updated after confirmation from the payment gateway.'),
+                    'alert_class' => 'alert-warning',
+                );
+
+            case 'created':
+                return array(
+                    'label' => $this->l('Payment awaiting completion'),
+                    'message' => $this->l('The payment has not been completed yet. You can retry it from the order detail.'),
+                    'alert_class' => 'alert-warning',
+                );
+
+            case 'failed':
+                return array(
+                    'label' => $this->l('Payment unsuccessful'),
+                    'message' => $this->l('The payment was not completed. You can try again from the order detail.'),
+                    'alert_class' => 'alert-danger',
+                );
+
+            case 'signature_failed':
+                return array(
+                    'label' => $this->l('Payment verification failed'),
+                    'message' => $this->l('The payment result could not be securely verified. Please contact us before making another payment.'),
+                    'alert_class' => 'alert-danger',
+                );
+
+            case 'partial_refunded':
+                return array(
+                    'label' => $this->l('Payment partially refunded'),
+                    'message' => $this->l('A part of the payment has been refunded.'),
+                    'alert_class' => 'alert-info',
+                );
+
+            case 'refunded':
+                return array(
+                    'label' => $this->l('Payment refunded'),
+                    'message' => $this->l('The payment has been refunded.'),
+                    'alert_class' => 'alert-info',
+                );
+
+            default:
+                return array(
+                    'label' => $this->l('Payment status unavailable'),
+                    'message' => $this->l('The current payment status could not be displayed. Please check the order detail or contact us.'),
+                    'alert_class' => 'alert-info',
+                );
+        }
     }
 
     public function hookDisplayOrderDetail($params)
@@ -239,137 +315,12 @@ class Jooim_Gpwebpay extends PaymentModule
             .'</div>';
     }
 
-
-    protected function getGithubApiUrl()
-    {
-        return 'https://api.github.com/repos/JOO-INTERNET-MEDIA-LTD/jooim_gpwebpay/releases/latest';
-    }
-
-    protected function getGithubReleasesUrl()
-    {
-        return 'https://github.com/JOO-INTERNET-MEDIA-LTD/jooim_gpwebpay/releases/latest';
-    }
-
-    protected function renderUpdateCheckPanel()
-    {
-        $result = $this->getLatestGithubReleaseVersion((bool) Tools::getValue('jooim_refresh_update'));
-        $latest = $result['version'] ? $result['version'] : $this->l('Unknown');
-        $statusClass = 'alert alert-info';
-        $statusText = $this->l('Unable to verify the latest version from GitHub. Check releases manually.');
-
-        if ($result['version']) {
-            if (version_compare($result['version'], $this->version, '>')) {
-                $statusClass = 'alert alert-warning';
-                $statusText = $this->l('A new module version is available.');
-            } else {
-                $statusClass = 'alert alert-success';
-                $statusText = $this->l('Module is up to date.');
-            }
-        } elseif (!empty($result['error'])) {
-            $statusText = $this->l('GitHub check failed: ').$result['error'];
-        }
-
-        $refreshUrl = AdminController::$currentIndex.'&configure='.$this->name.'&token='.Tools::getAdminTokenLite('AdminModules').'&jooim_refresh_update=1';
-
-        $html = '<div class="panel jooim-gpwebpay-update-panel">';
-        $html .= '<h3><i class="icon-refresh"></i> '.$this->l('Update check').'</h3>';
-        $html .= '<p><strong>'.$this->l('Current module version').':</strong> '.htmlspecialchars($this->version, ENT_QUOTES, 'UTF-8').'</p>';
-        $html .= '<p><strong>'.$this->l('Latest version on GitHub').':</strong> '.htmlspecialchars($latest, ENT_QUOTES, 'UTF-8').'</p>';
-        if (!empty($result['checked_at'])) {
-            $html .= '<p><strong>'.$this->l('Last checked').':</strong> '.htmlspecialchars($result['checked_at'], ENT_QUOTES, 'UTF-8').'</p>';
-        }
-        $html .= '<div class="'.$statusClass.'"><strong>'.$this->l('Update status').':</strong> '.htmlspecialchars($statusText, ENT_QUOTES, 'UTF-8').'</div>';
-        $html .= '<p>'.$this->l('For PrestaShop installation, do not use GitHub automatic "Source code ZIP". Use only the installation ZIP file from the release assets.').'</p>';
-        $html .= '<p><a class="btn btn-primary" href="'.htmlspecialchars($this->getGithubReleasesUrl(), ENT_QUOTES, 'UTF-8').'" target="_blank" rel="noopener">'.$this->l('Open GitHub Releases').'</a> ';
-        $html .= '<a class="btn btn-default" href="'.htmlspecialchars($refreshUrl, ENT_QUOTES, 'UTF-8').'">'.$this->l('Refresh update status').'</a></p>';
-        $html .= '</div>';
-
-        return $html;
-    }
-
-    protected function getLatestGithubReleaseVersion($forceRefresh = false)
-    {
-        $cacheVersion = 'JOOIM_GPWEBPAY_GITHUB_LATEST_VERSION';
-        $cacheChecked = 'JOOIM_GPWEBPAY_GITHUB_CHECKED_AT';
-        $cacheError = 'JOOIM_GPWEBPAY_GITHUB_ERROR';
-        $ttl = 21600;
-        $checkedAt = Configuration::get($cacheChecked);
-
-        if (!$forceRefresh && $checkedAt && (time() - strtotime($checkedAt)) < $ttl) {
-            return array(
-                'version' => Configuration::get($cacheVersion),
-                'checked_at' => $checkedAt,
-                'error' => Configuration::get($cacheError),
-            );
-        }
-
-        $response = $this->downloadGithubJson($this->getGithubApiUrl());
-        $version = '';
-        $error = '';
-
-        if ($response['success']) {
-            $data = json_decode($response['body'], true);
-            if (is_array($data) && !empty($data['tag_name'])) {
-                $version = preg_replace('/^v/i', '', (string) $data['tag_name']);
-            } else {
-                $error = 'Invalid GitHub API response.';
-            }
-        } else {
-            $error = $response['error'];
-        }
-
-        $now = date('Y-m-d H:i:s');
-        Configuration::updateValue($cacheVersion, $version);
-        Configuration::updateValue($cacheChecked, $now);
-        Configuration::updateValue($cacheError, $error);
-
-        return array('version' => $version, 'checked_at' => $now, 'error' => $error);
-    }
-
-    protected function downloadGithubJson($url)
-    {
-        if (function_exists('curl_init')) {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 6);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'jooim-gpwebpay-update-checker');
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/vnd.github+json'));
-            $body = curl_exec($ch);
-            $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $error = curl_error($ch);
-            curl_close($ch);
-
-            if ($body !== false && $httpCode >= 200 && $httpCode < 300) {
-                return array('success' => true, 'body' => $body, 'error' => '');
-            }
-
-            return array('success' => false, 'body' => '', 'error' => $error ? $error : 'HTTP '.$httpCode);
-        }
-
-        $context = stream_context_create(array(
-            'http' => array(
-                'method' => 'GET',
-                'timeout' => 6,
-                'header' => "User-Agent: jooim-gpwebpay-update-checker\r\nAccept: application/vnd.github+json\r\n",
-            ),
-        ));
-        $body = @file_get_contents($url, false, $context);
-
-        if ($body === false) {
-            return array('success' => false, 'body' => '', 'error' => 'Unable to download GitHub release information.');
-        }
-
-        return array('success' => true, 'body' => $body, 'error' => '');
-    }
-
     public function getContent()
     {
         $this->ensureRequiredHooks();
         if (Tools::isSubmit('submitGpwebpayConfig')) { $this->postProcessConfig(); }
         if (Tools::isSubmit('submitGpwebpayRefund')) { $this->postProcessRefund(); }
-        return $this->html.$this->renderJooboxSupportPanel().$this->renderUpdateCheckPanel().$this->renderForm().$this->renderInfo();
+        return $this->html.$this->renderJooboxSupportPanel().$this->renderForm().$this->renderInfo();
     }
 
     private function postProcessConfig()

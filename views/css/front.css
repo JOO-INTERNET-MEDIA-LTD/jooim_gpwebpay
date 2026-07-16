@@ -10,3 +10,17 @@ label[for^="payment-option"] img[src*="jooim_gpwebpay"] {
     margin-left: 8px;
     vertical-align: middle;
 }
+
+.gpwebpay-return {
+    margin-top: 1rem;
+}
+
+.gpwebpay-return__status,
+.gpwebpay-return__message {
+    margin: 0;
+}
+
+.gpwebpay-return__message {
+    margin-top: .35rem;
+}
+
