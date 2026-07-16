@@ -4,7 +4,7 @@ Free GP webpay / ČSOB payment module for PrestaShop by **JOO INTERNET MEDIA LTD
 
 - Module folder: `jooim_gpwebpay`
 - Internal configuration prefix: `DM_GPWEBPAY`
-- Version: `1.00.01`
+- Version: `1.00.02`
 - Supported PrestaShop versions: 1.7, 8.x, 9.x
 - GitHub profile: https://github.com/jooim12
 - GitHub repository: https://github.com/JOO-INTERNET-MEDIA-LTD/jooim_gpwebpay

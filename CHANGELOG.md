@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.00.02
+
+- Localized customer-facing payment status messages.
+- Removed raw GP webpay status values from the payment return page.
+- Added translated payment result messages.
+
 ## 1.00.01
 
 - Replaced raw internal payment states such as `paid` with customer-friendly translated labels on the order confirmation page.
