@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
   <name>jooim_gpwebpay</name>
-  <displayName><![CDATA[Payment gateway GP webpay / ČSOB]]></displayName>
+  <displayName><![CDATA[GP webpay Payment Gateway]]></displayName>
   <version><![CDATA[1.00.02]]></version>
-  <description><![CDATA[Accept card payments via GP webpay / ČSOB. Free GitHub version without individual support; supported through Joobox PrestaShop Cloud.]]></description>
+  <description><![CDATA[Accept card payments via GP webpay / ČSOB with repeat payment, logging and refund support.]]></description>
   <author><![CDATA[JOO INTERNET MEDIA LTD]]></author>
   <tab><![CDATA[payments_gateways]]></tab>
   <is_configurable>1</is_configurable>

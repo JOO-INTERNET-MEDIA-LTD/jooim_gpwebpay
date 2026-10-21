@@ -9,14 +9,17 @@ class Jooim_GpwebpayValidationModuleFrontController extends ModuleFrontControlle
         $orderNumber = (string)$params['ORDERNUMBER'];
         $payment = GpwebpayRepository::getByOrderNumber($orderNumber);
         if (!$payment) { GpwebpayRepository::log('error','Unknown GP webpay order number',$params,null,$orderNumber); Tools::redirect('index.php?controller=order'); }
+        if ((int)$payment['id_shop'] !== (int)$this->context->shop->id) {
+            http_response_code(400); exit('Invalid payment response.');
+        }
         $order = new Order((int)$payment['id_order']);
         $client = new GpwebpayClient($this->module);
         $verification = $client->verifyHttpResponseDetailed($params, (string)Configuration::get('DM_GPWEBPAY_MERCHANT_NUMBER'));
         $verified = (bool)$verification['verified'];
         GpwebpayRepository::log($verified ? 'info':'error', $verified ? 'Return signature verified':'Return signature failed', array('params'=>$params, 'verification'=>$verification), (int)$order->id, $orderNumber);
         if (!$verified) {
-            $this->module->setOrderState($order, (int)Configuration::get('DM_GPWEBPAY_OS_FAILED'));
-            $status = 'signature_failed';
+            // Untrusted callbacks must never change an order or expose its confirmation key.
+            http_response_code(400); exit('Invalid payment response.');
         } elseif ((string)$params['PRCODE'] === '0' && (string)$params['SRCODE'] === '0') {
             $status = ((int)Configuration::get('DM_GPWEBPAY_DEPOSIT_FLAG') === 1) ? 'paid' : 'authorized';
             $this->module->setOrderState($order, (int)Configuration::get($status === 'paid' ? 'DM_GPWEBPAY_OS_PAID' : 'DM_GPWEBPAY_OS_AUTHORIZED'));
