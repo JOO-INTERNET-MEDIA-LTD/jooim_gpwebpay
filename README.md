@@ -1,101 +1,58 @@
-# Payment gateway GP webpay / ČSOB for PrestaShop
+# GP webpay Payment Gateway
 
-Free GP webpay / ČSOB payment module for PrestaShop by **JOO INTERNET MEDIA LTD**.
+Integrates GP webpay / ČSOB card checkout, signed payment return verification, repeat payment, reconciliation and configured refund operations.
 
-- Module folder: `jooim_gpwebpay`
-- Internal configuration prefix: `DM_GPWEBPAY`
-- Version: `1.00.02`
-- Supported PrestaShop versions: 1.7, 8.x, 9.x
-- GitHub profile: https://github.com/jooim12
-- GitHub repository: https://github.com/JOO-INTERNET-MEDIA-LTD/jooim_gpwebpay
-- Support: https://joobox.eu/en-gb/support
+| | |
+| --- | --- |
+| Module | `jooim_gpwebpay` |
+| Source version | `1.00.02` |
+| Target platforms | PrestaShop 8.x and 9.x; staging validation required |
+| Author | JOO INTERNET MEDIA LTD |
 
-## Support policy
+## Features and scope
 
-This module is available for free on GitHub, but the free GitHub distribution does **not** include individual technical support.
+Payment controller creates a pending native order/payment request. GpwebpayClient signs provider requests and verifies signed results; validation controller updates stored payment/order status. GpwebpayRepository records transactions/logs. Cron reconciles unfinished payments through web services. Existing SOAP WSDL/XSD files are runtime assets.
 
-Technical support, installation, configuration, production testing, updates and troubleshooting are available only for customers using **Joobox PrestaShop Cloud**.
+## Requirements and compatibility
 
-See [SUPPORT.md](SUPPORT.md).
-
-## Support URLs
-
-- SK: https://joobox.eu/sk-sk/podpora
-- CS: https://joobox.eu/cs-cz/podpora
-- EN-GB: https://joobox.eu/en-gb/support
-- DE-DE: https://joobox.eu/de-de/unterstutzung
-- DE-AT: https://joobox.eu/de-at/unterstutzung
-- DE-CH: https://joobox.eu/de-ch/unterstutzung
-- FR-FR: https://joobox.eu/fr-fr/soutien
-- IT-IT: https://joobox.eu/it-it/supporto
-- EN-CA: https://joobox.eu/en-ca/support
-- FR-CA: https://joobox.eu/fr-ca/support
-- PL-PL: https://joobox.eu/pl-pl/wsparcie
-
-## What is implemented
-
-- PrestaShop payment method for GP webpay / ČSOB.
-- HTTP API payment creation with OpenSSL signing.
-- Return controller accepting GET and POST responses.
-- `DIGEST` and `DIGEST1` verification using GP webpay public key.
-- Order state mapping for pending, paid, failed, authorized and refunded payments.
-- Payment log table and admin order panel.
-- Repeat-payment link for unfinished/failed payments.
-- Currency and carrier restrictions.
-- Test mode, production mode and optional test IP whitelist.
-- WS client scaffold for `getPaymentStatus` and `processRefund`.
-- Cron endpoint for reconciliation of unfinished payments.
-- Joobox PrestaShop Cloud support panel above module settings.
-- Joobox footer attribution text in displayFooterAfter when available, with duplicate-output prevention across JOOIM modules.
-
-## Joobox attribution link
-
-The module installs with a small Joobox footer attribution text in displayFooterAfter when available. It is intended as a non-intrusive source/support attribution and is not configurable from the Back Office.
-
-## Server requirements
-
-- PHP OpenSSL functions: `openssl_get_privatekey`, `openssl_sign`, `base64_encode`, `openssl_free_key`, `openssl_get_publickey`, `openssl_verify`.
-- PHP cURL for WS refund/status calls.
+Use a PHP version supported by your selected PrestaShop release. The full PHP/core version matrix has not been certified. Merchant number, GP webpay public key, merchant private key and its password are required as configured by your provider. Test mode must be verified end to end before production.
 
 ## Installation
 
-Upload the `jooim_gpwebpay` folder into `/modules/`, install the module in PrestaShop admin, configure GP webpay credentials, test the full payment flow, then switch to production.
+1. Back up shop files/database and use staging first.
+2. Download an approved installation ZIP and its SHA256 from the release assets.
+3. Verify the checksum and upload the ZIP through Module Manager.
+4. Install and select the intended shop before configuration.
+5. Test the module’s actual workflow and theme hooks before production.
 
-Detailed notes are in the installation guides and manuals:
+Do not install GitHub’s automatic **Source code ZIP**. The archive must contain one `jooim_gpwebpay/` root with its module entry point.
 
-- English: [`docs/installation-en.md`](docs/installation-en.md), [`docs/manual-en.md`](docs/manual-en.md)
-- Slovak: [`docs/installation-sk.md`](docs/installation-sk.md), [`docs/manual-sk.md`](docs/manual-sk.md)
-- Czech: [`docs/installation-cs.md`](docs/installation-cs.md), [`docs/manual-cs.md`](docs/manual-cs.md)
+## Configuration and usage
 
-General configuration notes are in [`docs/configuration.md`](docs/configuration.md).
+DM_GPWEBPAY_* stores merchant/provider, private/public PEM keys, private-key password, mode, currency/carrier/test-IP restrictions, payment-method codes, deposit flag, pending/paid/failed/authorized/refunded state mappings and cron token. Defaults: TEST_MODE=1, PROVIDER=0300, DEPOSIT_FLAG=1, ALLOWED_CURRENCIES empty, ALLOWED_CARRIERS empty, PAYMETHODS=CRD,APAY,GPAY; order states derive from core PS_OS_* and cron token is generated. Empty password/key replacement retains stored secrets. Actual provider-enabled payment methods must be confirmed with the acquirer, not inferred from codes.
 
+## Languages
 
-## Updates from GitHub
+English source uses the module’s existing PrestaShop translation mechanism. Bundled language coverage varies by module and installed shop languages. Belgian locales use French/Dutch/German variants; Canadian locales use English/French variants. New wording may use English fallback where a locale is incomplete. Native-speaker review is not claimed.
 
-PrestaShop does not update arbitrary GitHub modules automatically from a repository URL. The safe update path is:
+## Troubleshooting and known limitations
 
-1. download the latest ZIP from GitHub Releases,
-2. upload the new module ZIP in PrestaShop Back Office,
-3. keep the same module folder name `jooim_gpwebpay`,
-4. increase the module version only in a future release,
-5. add PrestaShop upgrade scripts in `/upgrade/` when database or configuration changes are required.
+Gateway sandbox confirmation, signature/amount validation, callback retries, duplicate payment/refund protection and concurrent reconciliation are mandatory unresolved integration gates. Existing configuration validation is not fully transactional and needs a separate focused security review; this audit does not redesign payment processing.
 
-For developers, the repository root should contain the `jooim_gpwebpay` module folder. You can update a development installation by replacing that folder or by using Git in `/modules/jooim_gpwebpay`.
+Check the selected shop, configured credentials/options, assigned hooks, PHP extensions and PrestaShop cache first. Redact access URLs, secrets and customer data before sharing diagnostic output.
 
-## GitHub Issues
+## Updates, uninstall and recovery
 
-GitHub Issues are only for reproducible bugs in the module. They are not a free helpdesk for installation, bank configuration, custom shop debugging or production payment troubleshooting.
+Apply reviewed installation packages on staging, retain a backup and recheck hooks/translations afterward. Source versions and existing releases are independent for each module. No automatic release or remote installation is performed.
 
-## Important production warning
+Read the existing repository uninstall/schema handling before removal. Preserve payment/reconciliation evidence and export merchant settings securely; do not reset a payment module to repair footer hook placement.
 
-Before production use, run real GP webpay certification tests with your bank/acquirer, especially:
+For rollback, restore matching module files and the corresponding configuration/database backup when necessary. For GP webpay, verify `displayFooter` placement after updating older installations; do not reset the payment module to change a hook association.
 
-- successful payment,
-- failed payment,
-- return signature verification,
-- request parameter acceptance by GP webpay,
-- refund flow,
-- order state mapping,
-- cron reconciliation.
+## License and support
 
-The module is provided as-is. Use in production only after proper testing.
+See [LICENSE](LICENSE) for the actual terms.
+
+This free GitHub module is provided without individual technical support. Installation, configuration, production testing, updates and troubleshooting are available to customers of Joobox PrestaShop Cloud or another paid service expressly agreed with JOO INTERNET MEDIA LTD.
+
+[Get Joobox support](https://support.joobox.eu) · [GitHub repository](https://github.com/JOO-INTERNET-MEDIA-LTD/jooim_gpwebpay)

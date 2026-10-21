@@ -97,11 +97,17 @@ class GpwebpayClient
 
     public function verifyHttpResponseDetailed(array $params, $merchantNumber)
     {
+        // Both signatures are mandatory in the provider HTTP response contract.
+        $invalid = array('verified'=>false, 'digest_ok'=>false, 'digest1_ok'=>false,
+            'digest_candidate'=>'', 'digest1_candidate'=>'', 'candidate_labels'=>array());
+        foreach ($params as $value) { if (!is_scalar($value)) { return $invalid; } }
+        if (!is_string($params['DIGEST'] ?? null) || $params['DIGEST'] === ''
+            || !is_string($params['DIGEST1'] ?? null) || $params['DIGEST1'] === '') { return $invalid; }
         $params = $this->normalizeHttpResponseParams($params);
         $candidates = $this->buildHttpResponseSignatureCandidates($params);
 
         $digestOk = false;
-        $digest1Ok = !isset($params['DIGEST1']) || $params['DIGEST1'] === '';
+        $digest1Ok = false;
         $matchedDigest = '';
         $matchedDigest1 = '';
 

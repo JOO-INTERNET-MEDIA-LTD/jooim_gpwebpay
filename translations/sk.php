@@ -2,7 +2,7 @@
 
 global $_MODULE;
 $_MODULE = array();
-$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_23be09a008c320d16e213bd07f667a1d'] = 'Platobná brána GP webpay / ČSOB';
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_062dc2c17aa42ffe1ea5e5babdc0992f'] = 'Platobná brána GP webpay';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_b2f8054efbb359242e74d7657875666d'] = 'Prijímajte platby kartou cez GP webpay / ČSOB s podporou opakovania platby, logovania a refundácií.';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_ed65ec4a84166b8a25dc930161c39959'] = 'Zaplatiť kartou cez GP webpay / ČSOB';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_b0de4395705086035fb435a85188180b'] = 'Budete presmerovaný na zabezpečenú platobnú bránu GP webpay.';
@@ -54,7 +54,7 @@ $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_4e23a7d7a4aecdc45d2adaedbee
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_c9cc8cce247e49bae79f15173ce97354'] = 'Uložiť';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_0ee80c26200aac48102c0225f716a262'] = 'Cron URL';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_ab2ebdf8ad46c9ec200a5e99e3134d95'] = 'Spúšťajte každých 5 – 15 minút na párovanie nedokončených platieb cez WS getPaymentStatus.';
-$_MODULE['<{jooim_gpwebpay}prestashop>footer_attribution_0f46abf9fbbbb3f98d06a8c931733514'] = 'Prestashop modul od';
+$_MODULE['<{jooim_gpwebpay}prestashop>footer_attribution_ddc796b10ff22262407e143e3b59fdff'] = 'PrestaShop modul od';
 $_MODULE['<{jooim_gpwebpay}prestashop>customer_order_21ff087f1520a70163128cae982de67a'] = 'Platba kartou';
 $_MODULE['<{jooim_gpwebpay}prestashop>customer_order_61cadd64bd28ff7fc36f29ba5352b4f6'] = 'Predchádzajúca platba nebola dokončená. Platbu môžete skúsiť zopakovať.';
 $_MODULE['<{jooim_gpwebpay}prestashop>customer_order_b87f11d34b5d4905c56bbca497051aa3'] = 'Zopakovať platbu';
@@ -95,3 +95,32 @@ $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_38a4d6de8ac44592dfe6e0138b8
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_4aff263d1ee2b3e439dc04ec330e1cfd'] = 'Platba bola refundovaná.';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_876b8d4b5acbedb3f7077903f9bb5deb'] = 'Stav platby nie je dostupný';
 $_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_4152f2432a0ea67b3a9c2c16b8f670d4'] = 'Aktuálny stav platby sa nepodarilo zobraziť. Skontrolujte detail objednávky alebo nás kontaktujte.';
+
+// Retain legacy source labels still used by existing forms.
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_23be09a008c320d16e213bd07f667a1d'] = 'Platobná brána GP webpay / ČSOB';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>jooim_gpwebpay_777f9e90cf251ec077f633406368c632'] = 'Neplatná požiadavka.';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_105639f6b7c568ce5ecf630b6d196109'] = 'Je dostupná nová verzia modulu.';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_2c872e677f8b5831f20a66c65e7f8966'] = 'Skontrolovať teraz';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_68af74b08d0a6bef3a7cab83b43007a8'] = 'Aktuálna verzia modulu';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_4983a31862dad140b45327c23ce65978'] = 'For PrestaShop installation, do not use GitHub automatic Source code ZIP. Use only the installation ZIP file from the release assets.';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_712bd563f4ec14a3e9f63cd426a8f515'] = 'Posledná kontrola';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_90725f7a92bc20cc7d26c20261af79da'] = 'Najnovšia verzia na GitHube';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_d070948a9de78cc992b4a96b3ebac5b0'] = 'Nie je dostupné zverejnené vydanie.';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_4d610ce3b22af5655d2219f5db389605'] = 'Zatiaľ nebola úspešne vykonaná kontrola aktualizácií.';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_9b1c30237ba8488da852ca305c708f59'] = 'Modul je aktuálny.';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_9000d1fb2f066e529004786b7e5fb55a'] = 'Vydanie neobsahuje inštalačný ZIP a zodpovedajúci súbor SHA256.';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_e2b8575e1fd2467e8d1ee9749a57513c'] = 'Kontrola aktualizácií';
+
+$_MODULE['<{jooim_gpwebpay}prestashop>portfoliorelease_c61908b9e3bea5d734111574ee703b46'] = 'Kontrola aktualizácií nie je dostupná.';

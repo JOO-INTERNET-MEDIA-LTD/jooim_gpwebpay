@@ -1,21 +1,6 @@
 {* Joobox attribution. If another JOOIM module already printed the Joobox footer attribution, this block removes itself. *}
-<div class="jooim-joobox-attribution jooim-gpwebpay-attribution" data-jooim-attribution="jooim_gpwebpay" style="font-size:12px;line-height:1.4;text-align:center;margin:10px 0;opacity:.75;display:none;">
-  <span>{l s='Prestashop modul od' mod='jooim_gpwebpay'}</span>
-  <a href="{$joobox_home_url|escape:'html':'UTF-8'}" target="_blank" rel="noopener" style="text-decoration:none;">joobox.eu</a>
+<div class="jooim-joobox-attribution jooim-gpwebpay-attribution" data-jooim-attribution="jooim_gpwebpay" style="font-size:12px;line-height:1.4;text-align:center;margin:10px 0;">
+  <span>{l s='PrestaShop module by' mod='jooim_gpwebpay'}</span>
+  <a href="https://joobox.eu/" target="_blank" rel="noopener noreferrer">joobox.eu</a>
 </div>
-<script>
-(function(){
-  var current = document.currentScript && document.currentScript.previousElementSibling;
-  if (!current || !current.getAttribute || current.getAttribute('data-jooim-attribution') !== 'jooim_gpwebpay') return;
-
-  var existing = document.querySelectorAll('[data-jooim-attribution], .jooim-joobox-attribution');
-  for (var i = 0; i < existing.length; i++) {
-    if (existing[i] !== current && existing[i].querySelector && existing[i].querySelector('a[href*="joobox.eu"]')) {
-      if (current.parentNode) current.parentNode.removeChild(current);
-      return;
-    }
-  }
-
-  current.style.display = 'block';
-})();
-</script>
+{include file='module:jooim_gpwebpay/views/templates/hook/joobox-attribution-script.tpl'}

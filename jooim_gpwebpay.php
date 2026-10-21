@@ -21,7 +21,7 @@ class Jooim_Gpwebpay extends PaymentModule
         $this->bootstrap = true;
         $this->controllers = array('payment','validation','repeat','cron');
         parent::__construct();
-        $this->displayName = $this->l('Payment gateway GP webpay / ČSOB');
+        $this->displayName = $this->l('GP webpay Payment Gateway');
         $this->description = $this->l('Accept card payments via GP webpay / ČSOB with repeat payment, logging and refund support.');
         $this->ps_versions_compliancy = array('min'=>'1.7.0.0','max'=>'9.99.99');
     }
@@ -225,16 +225,16 @@ class Jooim_Gpwebpay extends PaymentModule
 
     private function registerFooterAttributionHook()
     {
-        if (class_exists('Hook') && (int)Hook::getIdByName('displayFooterAfter')) {
-            return $this->registerHook('displayFooterAfter');
-        }
-
+        // Hook availability in the database does not mean the theme executes it.
         return $this->registerHook('displayFooter');
     }
 
+    private $footerAttributionRendered = false;
+
     private function renderFooterAttribution()
     {
-        if (!$this->active) { return ''; }
+        if (!$this->active || $this->footerAttributionRendered) { return ''; }
+        $this->footerAttributionRendered = true;
         $this->context->smarty->assign(array(
             'joobox_home_url' => 'https://joobox.eu',
         ));
@@ -248,9 +248,6 @@ class Jooim_Gpwebpay extends PaymentModule
 
     public function hookDisplayFooter($params)
     {
-        // Fallback only for installations/themes where displayFooterAfter is not available.
-        // On standard Classic/Hummingbird themes this prevents duplicate attribution output.
-        if (class_exists('Hook') && (int)Hook::getIdByName('displayFooterAfter')) { return ''; }
         return $this->renderFooterAttribution();
     }
 
@@ -304,23 +301,34 @@ class Jooim_Gpwebpay extends PaymentModule
 
     private function renderJooboxSupportPanel()
     {
-        $url = $this->getJooboxSupportUrl();
+        $url = 'https://support.joobox.eu';
         $github = 'https://github.com/JOO-INTERNET-MEDIA-LTD/jooim_gpwebpay';
 
         return '<div class="panel jooim-gpwebpay-support-panel">'
             .'<h3><i class="icon-life-ring"></i> '.$this->l('Joobox support for this module').'</h3>'
             .'<p>'.$this->l('This free GitHub module is provided without individual technical support. Installation, configuration, production testing, updates and troubleshooting are available for customers using Joobox PrestaShop Cloud or another paid service explicitly agreed with JOO INTERNET MEDIA LTD.').'</p>'
-            .'<p><a class="btn btn-primary" href="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'" target="_blank" rel="noopener">'.$this->l('Get Joobox support').'</a> '
-            .'<a class="btn btn-default" href="'.htmlspecialchars($github, ENT_QUOTES, 'UTF-8').'" target="_blank" rel="noopener">GitHub</a></p>'
+            .'<p><a class="btn btn-primary" href="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'" target="_blank" rel="noopener noreferrer">'.$this->l('Get Joobox support').'</a> '
+            .'<a class="btn btn-default" href="'.htmlspecialchars($github, ENT_QUOTES, 'UTF-8').'" target="_blank" rel="noopener noreferrer">GitHub</a></p>'
             .'</div>';
     }
 
     public function getContent()
     {
+        require_once __DIR__.'/classes/PortfolioAdmin.php';
+        if (!JooimPortfolioAdmin::authorize($this, array('submitGpwebpayConfig','submitGpwebpayRefund','checkPortfolioRelease'), $this->context)) {
+            return $this->displayError($this->l('Invalid request.'));
+        }
+        return JooimPortfolioAdmin::render($this, $this->portfolioContent(), $this->context, isset($this->_path) ? $this->_path : '/modules/'.$this->name.'/');
+    }
+
+    private function portfolioContent()
+    {
+        require_once __DIR__.'/classes/PortfolioRelease.php';
+        if (Tools::isSubmit('checkPortfolioRelease')) { JooimGpwebpayPortfolioRelease::check($this->context); }
         $this->ensureRequiredHooks();
         if (Tools::isSubmit('submitGpwebpayConfig')) { $this->postProcessConfig(); }
         if (Tools::isSubmit('submitGpwebpayRefund')) { $this->postProcessRefund(); }
-        return $this->html.$this->renderJooboxSupportPanel().$this->renderForm().$this->renderInfo();
+        return $this->html.$this->renderJooboxSupportPanel().JooimGpwebpayPortfolioRelease::panel($this,$this->context).$this->renderForm().$this->renderInfo();
     }
 
     private function postProcessConfig()
@@ -435,10 +443,25 @@ class Jooim_Gpwebpay extends PaymentModule
 
     private function postProcessRefund()
     {
-        GpwebpayRepository::ensureSchema();
+        $token = Tools::getValue('token');
+        $employee = $this->context->employee ?? null;
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || !is_string($token)
+            || !hash_equals(Tools::getAdminTokenLite('AdminOrders'), $token)
+            || !$employee || !$employee->can('edit', 'AdminOrders') || !$this->getPermission('configure')) {
+            $this->html .= $this->displayError($this->l('Invalid refund request.')); return;
+        }
         $idOrder = (int)Tools::getValue('id_order');
-        $amount = (float)str_replace(',', '.', Tools::getValue('refund_amount'));
+        $rawAmount = Tools::getValue('refund_amount');
+        if (!is_scalar($rawAmount) || !is_numeric(str_replace(',', '.', (string)$rawAmount))) {
+            $this->html .= $this->displayError($this->l('Invalid refund request.')); return;
+        }
+        $amount = (float)str_replace(',', '.', (string)$rawAmount);
         $payment = GpwebpayRepository::getByOrderId($idOrder);
+        if (!is_finite($amount) || !$payment || (int)$payment['id_shop'] !== (int)$this->context->shop->id
+            || !$employee->hasAuthOnShop((int)$payment['id_shop'])) {
+            $this->html .= $this->displayError($this->l('Invalid refund request.')); return;
+        }
+        GpwebpayRepository::ensureSchema();
         if (!$payment || $amount <= 0) { $this->html .= $this->displayError($this->l('Invalid refund request.')); return; }
         try {
             $order = new Order($idOrder);
