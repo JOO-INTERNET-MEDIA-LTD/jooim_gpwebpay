@@ -40,7 +40,7 @@ final class JooimGpwebpayPortfolioRelease
         elseif($state==='unavailable'){$status='Update check unavailable.';}
         elseif(!empty($result['version'])){$status=version_compare($result['version'],$module->version,'>') ? 'A new module version is available.' : 'The module is up to date.';}
         $action=$context->link->getAdminLink('AdminModules',true,[],['configure'=>$module->name]);
-        return '<div class="panel"><h3>'.$t('Update check').'</h3><p>'.$t('Current module version').': '.$e($module->version).'</p><p>'.$t('Latest version on GitHub').': '.$e($result['version'] ?? '—').'</p><p>'.$t('Last checked').': '.$e($result['checked'] ?? '—').' UTC</p><p><strong>'.$t($status).'</strong></p>'
+        return '<div class="panel jooim-updates"><h3>'.$t('Update check').'</h3><p>'.$t('Current module version').': '.$e($module->version).'</p><p>'.$t('Latest version on GitHub').': '.$e($result['version'] ?? '—').'</p><p>'.$t('Last checked').': '.$e($result['checked'] ?? '—').' UTC</p><p><strong>'.$t($status).'</strong></p>'
             .($state==='available' && empty($result['installable']) ? '<p>'.$t('The release has no installation ZIP and matching SHA256 asset.').'</p>' : '')
             .'<p>'.$t('For PrestaShop installation, do not use GitHub automatic Source code ZIP. Use only the installation ZIP file from the release assets.').'</p>'
             .'<form method="post" action="'.$e($action).'"><input type="hidden" name="token" value="'.$e(Tools::getAdminTokenLite('AdminModules')).'"><button class="btn btn-default" name="checkPortfolioRelease" value="1">'.$t('Check now').'</button></form></div>';

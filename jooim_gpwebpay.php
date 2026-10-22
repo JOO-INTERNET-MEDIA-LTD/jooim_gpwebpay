@@ -304,7 +304,7 @@ class Jooim_Gpwebpay extends PaymentModule
         $url = 'https://support.joobox.eu';
         $github = 'https://github.com/JOO-INTERNET-MEDIA-LTD/jooim_gpwebpay';
 
-        return '<div class="panel jooim-gpwebpay-support-panel">'
+        return '<div class="panel jooim-support jooim-gpwebpay-support-panel">'
             .'<h3><i class="icon-life-ring"></i> '.$this->l('Joobox support for this module').'</h3>'
             .'<p>'.$this->l('This free GitHub module is provided without individual technical support. Installation, configuration, production testing, updates and troubleshooting are available for customers using Joobox PrestaShop Cloud or another paid service explicitly agreed with JOO INTERNET MEDIA LTD.').'</p>'
             .'<p><a class="btn btn-primary" href="'.htmlspecialchars($url, ENT_QUOTES, 'UTF-8').'" target="_blank" rel="noopener noreferrer">'.$this->l('Get Joobox support').'</a> '
@@ -328,7 +328,7 @@ class Jooim_Gpwebpay extends PaymentModule
         $this->ensureRequiredHooks();
         if (Tools::isSubmit('submitGpwebpayConfig')) { $this->postProcessConfig(); }
         if (Tools::isSubmit('submitGpwebpayRefund')) { $this->postProcessRefund(); }
-        return $this->html.$this->renderJooboxSupportPanel().JooimGpwebpayPortfolioRelease::panel($this,$this->context).$this->renderForm().$this->renderInfo();
+        return $this->html.$this->renderJooboxSupportPanel().JooimGpwebpayPortfolioRelease::panel($this,$this->context).'<!--jooim-settings-->'.$this->renderForm().$this->renderInfo();
     }
 
     private function postProcessConfig()
@@ -552,7 +552,7 @@ class Jooim_Gpwebpay extends PaymentModule
         foreach (array('DM_GPWEBPAY_TEST_MODE','DM_GPWEBPAY_MERCHANT_NUMBER','DM_GPWEBPAY_PROVIDER','DM_GPWEBPAY_ALLOWED_CURRENCIES','DM_GPWEBPAY_ALLOWED_CARRIERS','DM_GPWEBPAY_TEST_IPS','DM_GPWEBPAY_PAYMETHODS','DM_GPWEBPAY_DEPOSIT_FLAG','DM_GPWEBPAY_OS_PENDING','DM_GPWEBPAY_OS_PAID','DM_GPWEBPAY_OS_FAILED','DM_GPWEBPAY_OS_AUTHORIZED','DM_GPWEBPAY_OS_REFUNDED') as $k) { $helper->fields_value[$k] = Configuration::get($k); }
         $helper->fields_value['DM_GPWEBPAY_PRIVATE_KEY_PASSWORD'] = '';
         $helper->fields_value['DM_GPWEBPAY_PRIVATE_KEY'] = ''; $helper->fields_value['DM_GPWEBPAY_PUBLIC_KEY'] = '';
-        return $helper->generateForm(array($fieldsForm));
+        return $helper->generateForm(array(JooimPortfolioAdmin::fields($fieldsForm, $helper->fields_value)));
     }
 
     private function renderInfo()
